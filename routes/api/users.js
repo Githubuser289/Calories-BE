@@ -254,6 +254,33 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/users/logout:
+ *   get:
+ *     summary: Logout current user
+ *     description: Logs out the currently authenticated user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: Successfully logged out
+ *       401:
+ *         description: Unauthorized - Authentication is required for this route
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Server error: error message details"
+ */
+
 /* GET localhost:3000/api/users/logout */
 router.get("/logout", checkAuth, async (req, res, next) => {
   try {
