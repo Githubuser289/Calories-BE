@@ -1,34 +1,3 @@
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management and login
- */
-
-/**
- * @swagger
- * tags:
- *   - name: Login
- *     description: Login
- *   - name: Accounts
- *     description: Accounts
- */
-/**
- * @swagger
- * /users/signup:
- *   post:
- *     summary: user signup route--summary
- *     description: Needs name, email, and password--description
- *     responses:
- *       201:
- *         description: Created -user account was successfully created
- *       400:
- *         description: Bad request -given data are not correct or in the right format
- *       409:
- *         description: Conflict -email in use
- *       500:
- *         description: Server error
- */
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -51,6 +20,85 @@ const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
+
+/**
+ * @swagger
+ * /api/users/signup:
+ *   post:
+ *     summary: Register a new user
+ *     description: Register a new user with name, email, and password.
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: password123
+ *     responses:
+ *       201:
+ *         description: Successfully registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
+ *       400:
+ *         description: Bad request - Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Validation error details"
+ *       409:
+ *         description: Conflict - Email already in use
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Email in use"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Server error: error message details"
+ */
 
 /* POST localhost:3000/api/users/signup */
 router.post("/signup", async (req, res) => {
@@ -91,6 +139,84 @@ router.post("/signup", async (req, res) => {
       .json({ message: `Server error: ${error.message}` });
   }
 });
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Login user
+ *     description: Authenticate user with email and password.
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: Successfully authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: your.jwt.token.here
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
+ *       400:
+ *         description: Bad request - Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Validation error details"
+ *       401:
+ *         description: Unauthorized - Email or password is wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Email or password is wrong"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Server error: error message details"
+ */
 
 /* POST localhost:3000/api/users/login */
 router.post("/login", async (req, res, next) => {
