@@ -13,8 +13,81 @@ const intakeSchema = Joi.object({
   bloodType: Joi.number().required(),
 });
 
-/* GET localhost:3000/api/intake */
-router.get("/", async (req, res) => {
+/**
+ * @swagger
+ * /api/intake:
+ *   post:
+ *     summary: Calculate daily calorie intake and get non-recommended foods.
+ *     tags:
+ *       - Intake
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               height:
+ *                 type: number
+ *                 example: 170
+ *               age:
+ *                 type: number
+ *                 example: 25
+ *               currentWeight:
+ *                 type: number
+ *                 example: 70
+ *               desiredWeight:
+ *                 type: number
+ *                 example: 65
+ *               bloodType:
+ *                 type: number
+ *                 example: 1
+ *             required:
+ *               - height
+ *               - age
+ *               - currentWeight
+ *               - desiredWeight
+ *               - bloodType
+ *     responses:
+ *       200:
+ *         description: Daily calorie intake and non-recommended foods.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dailyCalIntake:
+ *                   type: number
+ *                   example: 1800
+ *                 foodNotRcmnded:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["bread", "sugar", "pasta"]
+ *       400:
+ *         description: Bad request, validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "height is required"
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Server error: Internal Server Error"
+ */
+
+/* POST localhost:3000/api/intake */
+router.post("/", async (req, res) => {
   // console.log(req.body);
   try {
     const { error, value } = intakeSchema.validate(req.body);
