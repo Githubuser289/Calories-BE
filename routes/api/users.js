@@ -312,35 +312,35 @@ router.get("/logout", checkAuth, async (req, res, next) => {
 });
 
 /* GET localhost:3000/api/users/current */
-router.get("/current", checkAuth, async (req, res, next) => {
-  try {
-    const header = req.get("authorization");
-    if (!header) {
-      return res
-        .status(STATUS_CODES.unauthorized)
-        .json({ message: "Authentication is required for this route" });
-    }
+// router.get("/current", checkAuth, async (req, res, next) => {
+//   try {
+//     const header = req.get("authorization");
+//     if (!header) {
+//       return res
+//         .status(STATUS_CODES.unauthorized)
+//         .json({ message: "Authentication is required for this route" });
+//     }
 
-    const token = header.split(" ")[1];
-    const payload = AuthController.getPayloadFromJWT(token);
+//     const token = header.split(" ")[1];
+//     const payload = AuthController.getPayloadFromJWT(token);
 
-    const filter = { _id: payload.data._id };
+//     const filter = { _id: payload.data._id };
 
-    const user = await User.findOne(filter);
-    if (!user) {
-      return res
-        .status(STATUS_CODES.unauthorized)
-        .json({ message: "Not authorized" });
-    }
+//     const user = await User.findOne(filter);
+//     if (!user) {
+//       return res
+//         .status(STATUS_CODES.unauthorized)
+//         .json({ message: "Not authorized" });
+//     }
 
-    res.status(STATUS_CODES.success).json({
-      email: user.email,
-      subscription: user.subscription,
-    });
-  } catch (error) {
-    respondWithError(res, error, STATUS_CODES.error);
-  }
-});
+//     res.status(STATUS_CODES.success).json({
+//       email: user.email,
+//       subscription: user.subscription,
+//     });
+//   } catch (error) {
+//     respondWithError(res, error, STATUS_CODES.error);
+//   }
+// });
 
 /**
  * Handles Error Cases
