@@ -130,10 +130,14 @@ router.get("/:date", checkAuth, async (req, res, next) => {
       userid: userID,
     });
     let resultList = [];
-
-    const foundEntry = userRecord[0].consumedproducts.find(
-      (entry) => entry.date === givenDate
-    );
+    let foundEntry;
+    if (userRecord.length > 0) {
+      foundEntry = userRecord[0].consumedproducts.find(
+        (entry) => entry.date === givenDate
+      );
+    } else {
+      foundEntry = false;
+    }
 
     if (foundEntry) {
       const products = foundEntry.products;
